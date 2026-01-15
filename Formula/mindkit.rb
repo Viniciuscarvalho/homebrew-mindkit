@@ -8,8 +8,19 @@ class Mindkit < Formula
   depends_on "node"
 
   def install
-    system "npm", "install", *std_npm_args
-    bin.install_symlink Dir["#{libexec}/bin/*"]
+    # Install dependencies
+    system "npm", "install"
+    # Build the project
+    system "npm", "run", "build"
+
+    # Install to libexec
+    libexec.install Dir["*"]
+
+    # Create wrapper script
+    (bin/"mindkit").write <<~EOS
+      #!/bin/bash
+      exec "#{Formula["node"].opt_bin}/node" "#{libexec}/dist/cli/index.js" "$@"
+    EOS
   end
 
   test do
