@@ -1,26 +1,15 @@
 class Mindkit < Formula
   desc "Forge your AI development mind - Install and sync AI configs across Claude, Cursor, and Codex"
   homepage "https://github.com/Viniciuscarvalho/mindkit"
-  url "https://github.com/Viniciuscarvalho/mindkit/archive/refs/tags/v0.1.0.tar.gz"
-  sha256 "dae06d553e46da9a4a1ee3bd1aa371ada675720fb9c8bdaff1cf41fcc0cd9408"
+  url "https://registry.npmjs.org/mindkit/-/mindkit-0.1.0.tgz"
+  sha256 "07d5e50a5ef23ba287891f78287f37a2e67da5272f3ffc1c689be0f1f44947ae"
   license "MIT"
 
   depends_on "node"
 
   def install
-    # Install dependencies
-    system "npm", "install"
-    # Build the project
-    system "npm", "run", "build"
-
-    # Install to libexec
-    libexec.install Dir["*"]
-
-    # Create wrapper script
-    (bin/"mindkit").write <<~EOS
-      #!/bin/bash
-      exec "#{Formula["node"].opt_bin}/node" "#{libexec}/dist/cli/index.js" "$@"
-    EOS
+    system "npm", "install", *std_npm_args
+    bin.install_symlink Dir["#{libexec}/bin/*"]
   end
 
   test do
